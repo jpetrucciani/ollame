@@ -1,0 +1,1 @@
+{ "model": "test-nomic-embed", "input": ["search_document: one", "search_document: two"], "encoding_format": "float" }

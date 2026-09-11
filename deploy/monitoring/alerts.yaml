@@ -1,0 +1,34 @@
+groups:
+  - name: ollame.operations
+    rules:
+      - alert: OllameCatalogStale
+        expr: (ollame_catalog_last_success_timestamp_seconds == 0) or (time() - ollame_catalog_last_success_timestamp_seconds > 300)
+        for: 2m
+        labels:
+          severity: warning
+        annotations:
+          summary: Ollame catalog discovery is stale
+          description: Check upstream connectivity, credentials and reload errors. Readiness intentionally stays up after initial discovery.
+      - alert: OllameSecretSourceFailures
+        expr: increase(ollame_secret_source_errors_total{reason="read_or_parse"}[5m]) >= 3
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: Ollame cannot read a secret source reliably
+          description: Restore the source permissions or contents. Token sources retain last-good values only through auth.stale_grace; unreadable upstream keys retain the last-good key.
+      - alert: OllameTokenSourceExpired
+        expr: increase(ollame_secret_source_errors_total{reason="stale_expired"}[5m]) > 0
+        labels:
+          severity: critical
+        annotations:
+          summary: Ollame dropped tokens from an expired source
+          description: The source exceeded auth.stale_grace and failed closed. Restore a readable, valid source; do not disable authentication.
+      - alert: OllameUpstreamReloadFailures
+        expr: increase(ollame_config_reloads_total{result="upstream_failed"}[5m]) >= 3
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: Ollame rejected repeated upstream reloads
+          description: Candidate upstream credentials or URL failed discovery. The previous upstream snapshot remains active while authentication updates continue.

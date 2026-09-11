@@ -1,0 +1,233 @@
+{
+  'rule_files': ['../../deploy/monitoring/alerts.yaml'],
+  'evaluation_interval': '1m',
+  'tests':
+    [
+      {
+        'name': 'catalog age, firing delay and recovery',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'ollame_catalog_last_success_timestamp_seconds{job="ollame",instance="replica-a"}',
+              'values': '1+0x8 540+60x5',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '5m', 'alertname': 'OllameCatalogStale', 'exp_alerts': [] },
+            { 'eval_time': '7m', 'alertname': 'OllameCatalogStale', 'exp_alerts': [] },
+            {
+              'eval_time': '8m',
+              'alertname': 'OllameCatalogStale',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels': { 'job': 'ollame', 'instance': 'replica-a', 'severity': 'warning' },
+                    'exp_annotations':
+                      {
+                        'summary': 'Ollame catalog discovery is stale',
+                        'description': 'Check upstream connectivity, credentials and reload errors. Readiness intentionally stays up after initial discovery.',
+                      },
+                  },
+                ],
+            },
+            { 'eval_time': '9m', 'alertname': 'OllameCatalogStale', 'exp_alerts': [] },
+          ],
+      },
+      {
+        'name': 'never initialized catalog',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'ollame_catalog_last_success_timestamp_seconds{job="ollame",instance="replica-a"}',
+              'values': '0+0x5',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '1m', 'alertname': 'OllameCatalogStale', 'exp_alerts': [] },
+            {
+              'eval_time': '2m',
+              'alertname': 'OllameCatalogStale',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels': { 'job': 'ollame', 'instance': 'replica-a', 'severity': 'warning' },
+                    'exp_annotations':
+                      {
+                        'summary': 'Ollame catalog discovery is stale',
+                        'description': 'Check upstream connectivity, credentials and reload errors. Readiness intentionally stays up after initial discovery.',
+                      },
+                  },
+                ],
+            },
+          ],
+      },
+      {
+        'name': 'healthy refreshing catalog',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'ollame_catalog_last_success_timestamp_seconds{job="ollame",instance="replica-a"}',
+              'values': '1+60x15',
+            },
+          ],
+        'alert_rule_test': [{ 'eval_time': '15m', 'alertname': 'OllameCatalogStale', 'exp_alerts': [] }],
+      },
+      {
+        'name': 'OllameSecretSourceFailures sustained failure and recovery',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'ollame_secret_source_errors_total{job="ollame",instance="replica-a",source="file",reason="read_or_parse"}',
+              'values': '0+2x5 10+0x10',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '1m', 'alertname': 'OllameSecretSourceFailures', 'exp_alerts': [] },
+            {
+              'eval_time': '4m',
+              'alertname': 'OllameSecretSourceFailures',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      {
+                        'job': 'ollame',
+                        'instance': 'replica-a',
+                        'severity': 'warning',
+                        'source': 'file',
+                        'reason': 'read_or_parse',
+                      },
+                    'exp_annotations':
+                      {
+                        'summary': 'Ollame cannot read a secret source reliably',
+                        'description': 'Restore the source permissions or contents. Token sources retain last-good values only through auth.stale_grace; unreadable upstream keys retain the last-good key.',
+                      },
+                  },
+                ],
+            },
+            { 'eval_time': '12m', 'alertname': 'OllameSecretSourceFailures', 'exp_alerts': [] },
+          ],
+      },
+      {
+        'name': 'OllameSecretSourceFailures isolated error does not page',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'ollame_secret_source_errors_total{job="ollame",instance="replica-a",source="file",reason="read_or_parse"}',
+              'values': '0 1+0x10',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '4m', 'alertname': 'OllameSecretSourceFailures', 'exp_alerts': [] },
+            { 'eval_time': '8m', 'alertname': 'OllameSecretSourceFailures', 'exp_alerts': [] },
+          ],
+      },
+      {
+        'name': 'OllameUpstreamReloadFailures sustained failure and recovery',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'ollame_config_reloads_total{job="ollame",instance="replica-a",result="upstream_failed"}',
+              'values': '0+2x5 10+0x10',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '1m', 'alertname': 'OllameUpstreamReloadFailures', 'exp_alerts': [] },
+            {
+              'eval_time': '4m',
+              'alertname': 'OllameUpstreamReloadFailures',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      { 'job': 'ollame', 'instance': 'replica-a', 'severity': 'warning', 'result': 'upstream_failed' },
+                    'exp_annotations':
+                      {
+                        'summary': 'Ollame rejected repeated upstream reloads',
+                        'description': 'Candidate upstream credentials or URL failed discovery. The previous upstream snapshot remains active while authentication updates continue.',
+                      },
+                  },
+                ],
+            },
+            { 'eval_time': '12m', 'alertname': 'OllameUpstreamReloadFailures', 'exp_alerts': [] },
+          ],
+      },
+      {
+        'name': 'OllameUpstreamReloadFailures isolated error does not page',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'ollame_config_reloads_total{job="ollame",instance="replica-a",result="upstream_failed"}',
+              'values': '0 1+0x10',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '4m', 'alertname': 'OllameUpstreamReloadFailures', 'exp_alerts': [] },
+            { 'eval_time': '8m', 'alertname': 'OllameUpstreamReloadFailures', 'exp_alerts': [] },
+          ],
+      },
+      {
+        'name': 'expired token source and recovery',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'ollame_secret_source_errors_total{job="ollame",instance="replica-a",source="directory",reason="stale_expired"}',
+              'values': '0 1+0x10',
+            },
+          ],
+        'alert_rule_test':
+          [
+            { 'eval_time': '0m', 'alertname': 'OllameTokenSourceExpired', 'exp_alerts': [] },
+            {
+              'eval_time': '1m',
+              'alertname': 'OllameTokenSourceExpired',
+              'exp_alerts':
+                [
+                  {
+                    'exp_labels':
+                      {
+                        'job': 'ollame',
+                        'instance': 'replica-a',
+                        'severity': 'critical',
+                        'source': 'directory',
+                        'reason': 'stale_expired',
+                      },
+                    'exp_annotations':
+                      {
+                        'summary': 'Ollame dropped tokens from an expired source',
+                        'description': 'The source exceeded auth.stale_grace and failed closed. Restore a readable, valid source; do not disable authentication.',
+                      },
+                  },
+                ],
+            },
+            { 'eval_time': '7m', 'alertname': 'OllameTokenSourceExpired', 'exp_alerts': [] },
+          ],
+      },
+      {
+        'name': 'counter reset is not a source failure',
+        'interval': '1m',
+        'input_series':
+          [
+            {
+              'series': 'ollame_secret_source_errors_total{job="ollame",instance="replica-a",source="file",reason="read_or_parse"}',
+              'values': '100+0x2 0+0x10',
+            },
+          ],
+        'alert_rule_test': [{ 'eval_time': '4m', 'alertname': 'OllameSecretSourceFailures', 'exp_alerts': [] }],
+      },
+    ],
+}

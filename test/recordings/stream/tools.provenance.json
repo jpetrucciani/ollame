@@ -1,0 +1,8 @@
+{
+  "source": "real LiteLLM -> llama-server",
+  "pins": "../../integration/pins.json",
+  "sha256": "2000503ef95f706b0626685d2890cfa7073879debbe5e93fc2c61fe8bb3739c4",
+  "content_type": "text/event-stream",
+  "recorded_date": "2026-09-10",
+  "request": "tools.request.json"
+}

@@ -1,0 +1,24 @@
+model_list:
+  - model_name: test-qwen3
+    litellm_params:
+      model: openai/test-qwen3
+      api_base: http://llama:8080/v1
+      api_key: local-test-only
+    model_info:
+      mode: chat
+      max_input_tokens: 4096
+      supports_function_calling: true
+      supports_vision: false
+      supports_reasoning: true
+  - model_name: test-nomic-embed
+    litellm_params:
+      model: openai/test-nomic-embed
+      api_base: http://embedding:8080/v1
+      api_key: local-test-only
+    model_info:
+      mode: embedding
+      max_input_tokens: 2048
+      output_vector_size: 768
+litellm_settings:
+  telemetry: false
+  num_retries: 0

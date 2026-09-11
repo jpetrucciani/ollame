@@ -1,0 +1,19 @@
+.db
+.direnv
+result*
+
+# go
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+
+
+# local runtime credentials
+.secrets/
+
+tmp
+.env

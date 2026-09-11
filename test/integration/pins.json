@@ -1,0 +1,19 @@
+{
+  "platform": "linux/amd64",
+  "llama_server": "ghcr.io/ggml-org/llama.cpp@sha256:33495b1b7ba57e56f8c88aa16bcd6b7950780b2785289fde64b68a531ad4dc6a",
+  "litellm": "ghcr.io/berriai/litellm@sha256:d85c0b36e2fdd64719e7fc2692431cd5aee0814925e96c2892d1491b13189c23",
+  "embedding_model": {
+    "repository": "nomic-ai/nomic-embed-text-v1.5-GGUF",
+    "revision": "0188c9bf409793f810680a5a431e7b899c46104c",
+    "file": "nomic-embed-text-v1.5.Q4_K_M.gguf",
+    "bytes": 84106624,
+    "sha256": "d4e388894e09cf3816e8b0896d81d265b55e7a9fff9ab03fe8bf4ef5e11295ac"
+  },
+  "model": {
+    "repository": "Qwen/Qwen3-0.6B-GGUF",
+    "revision": "23749fefcc72300e3a2ad315e1317431b06b590a",
+    "file": "Qwen3-0.6B-Q8_0.gguf",
+    "bytes": 639446688,
+    "sha256": "9465e63a22add5354d9bb4b99e90117043c7124007664907259bd16d043bb031"
+  }
+}

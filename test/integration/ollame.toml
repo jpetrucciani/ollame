@@ -1,0 +1,5 @@
+# This custom embedding model returns its full vector. LiteLLM restricts the
+# dimensions parameter to recognized model names; ollame truncates locally.
+[[models.override]]
+match = "test-nomic-embed"
+drop_params = ["dimensions"]

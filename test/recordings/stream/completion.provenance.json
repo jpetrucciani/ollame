@@ -1,0 +1,8 @@
+{
+  "source": "real LiteLLM -> llama-server",
+  "pins": "../../integration/pins.json",
+  "sha256": "486cfc432b52d33833a83a723df7deed87318147a4c2603b8fcba302e901b155",
+  "content_type": "application/json",
+  "recorded_date": "2026-09-10",
+  "request": "completion.request.json"
+}

@@ -1,0 +1,12 @@
+{
+  "data": [
+    {
+      "id": "test-qwen3",
+      "object": "model",
+      "created": 1677610602,
+      "owned_by": "openai",
+      "max_input_tokens": 4096
+    }
+  ],
+  "object": "list"
+}

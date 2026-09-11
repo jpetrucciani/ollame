@@ -1,0 +1,91 @@
+{
+  "id": "chatcmpl-Xcpd6mbIfx3093Yr1TAnKy4m1Fy8aUb2",
+  "object": "text_completion",
+  "created": 1789058698,
+  "model": "test-qwen3",
+  "choices": [
+    {
+      "finish_reason": "length",
+      "index": 0,
+      "text": " \n\nThe user is",
+      "logprobs": {
+        "text_offset": null,
+        "token_logprobs": null,
+        "tokens": null,
+        "top_logprobs": null,
+        "content": [
+          {
+            "id": 4710,
+            "token": " \n\n",
+            "bytes": [32, 10, 10],
+            "logprob": -2.2982828617095947,
+            "top_logprobs": [
+              { "id": 4710, "token": " \n\n", "bytes": [32, 10, 10], "logprob": -2.2982828617095947 },
+              { "id": 760, "token": " |", "bytes": [32, 124], "logprob": -3.0710716247558594 }
+            ]
+          },
+          {
+            "id": 785,
+            "token": "The",
+            "bytes": [84, 104, 101],
+            "logprob": -2.533121109008789,
+            "top_logprobs": [
+              { "id": 785, "token": "The", "bytes": [84, 104, 101], "logprob": -2.533121109008789 },
+              { "id": 9707, "token": "Hello", "bytes": [72, 101, 108, 108, 111], "logprob": -2.6647768020629883 }
+            ]
+          },
+          {
+            "id": 1196,
+            "token": " user",
+            "bytes": [32, 117, 115, 101, 114],
+            "logprob": -2.7232298851013184,
+            "top_logprobs": [
+              { "id": 1196, "token": " user", "bytes": [32, 117, 115, 101, 114], "logprob": -2.7232298851013184 },
+              {
+                "id": 3491,
+                "token": " problem",
+                "bytes": [32, 112, 114, 111, 98, 108, 101, 109],
+                "logprob": -3.3358263969421387
+              }
+            ]
+          },
+          {
+            "id": 374,
+            "token": " is",
+            "bytes": [32, 105, 115],
+            "logprob": -1.844923734664917,
+            "top_logprobs": [
+              { "id": 374, "token": " is", "bytes": [32, 105, 115], "logprob": -1.844923734664917 },
+              { "id": 2727, "token": " says", "bytes": [32, 115, 97, 121, 115], "logprob": -1.9717719554901123 }
+            ]
+          }
+        ]
+      }
+    }
+  ],
+  "usage": {
+    "completion_tokens": 4,
+    "prompt_tokens": 7,
+    "total_tokens": 11,
+    "completion_tokens_details": null,
+    "prompt_tokens_details": {
+      "audio_tokens": null,
+      "cached_tokens": 6,
+      "text_tokens": null,
+      "image_tokens": null,
+      "video_tokens": null
+    }
+  },
+  "system_fingerprint": "b10884-434ddbbc0",
+  "timings": {
+    "cache_n": 6,
+    "prompt_n": 1,
+    "prompt_ms": 19.787,
+    "prompt_per_token_ms": 19.787,
+    "prompt_per_second": 50.5382321726386,
+    "predicted_n": 4,
+    "predicted_ms": 61.252,
+    "predicted_per_token_ms": 20.417333333333335,
+    "predicted_per_second": 48.977992555345125
+  }
+}

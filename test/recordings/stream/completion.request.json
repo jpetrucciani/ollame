@@ -1,0 +1,8 @@
+{
+  "model": "test-qwen3",
+  "prompt": "Reply with the single word hello.",
+  "stream": false,
+  "max_tokens": 4,
+  "logprobs": 2,
+  "temperature": 0
+}

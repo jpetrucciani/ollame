@@ -1,0 +1,66 @@
+services:
+  llama:
+    image: ghcr.io/ggml-org/llama.cpp@sha256:33495b1b7ba57e56f8c88aa16bcd6b7950780b2785289fde64b68a531ad4dc6a
+    platform: linux/amd64
+    command:
+      [
+        '--model',
+        '/models/model.gguf',
+        '--jinja',
+        '--alias',
+        'test-qwen3',
+        '--threads',
+        '2',
+        '--ctx-size',
+        '4096',
+        '--parallel',
+        '1',
+        '--host',
+        '0.0.0.0',
+        '--port',
+        '8080',
+      ]
+    volumes:
+      - '${OLLAME_TEST_MODEL:?Set OLLAME_TEST_MODEL to the verified GGUF path}:/models/model.gguf:ro'
+    mem_limit: 2g
+    cpus: 2
+  embedding:
+    image: ghcr.io/ggml-org/llama.cpp@sha256:33495b1b7ba57e56f8c88aa16bcd6b7950780b2785289fde64b68a531ad4dc6a
+    platform: linux/amd64
+    command:
+      [
+        '--model',
+        '/models/model.gguf',
+        '--embedding',
+        '--pooling',
+        'mean',
+        '--alias',
+        'test-nomic-embed',
+        '--threads',
+        '2',
+        '--ctx-size',
+        '2048',
+        '--parallel',
+        '1',
+        '--host',
+        '0.0.0.0',
+        '--port',
+        '8080',
+      ]
+    volumes:
+      - '${OLLAME_TEST_EMBED_MODEL:?Set OLLAME_TEST_EMBED_MODEL to the verified embedding GGUF path}:/models/model.gguf:ro'
+    mem_limit: 1g
+    cpus: 2
+  litellm:
+    image: ghcr.io/berriai/litellm@sha256:d85c0b36e2fdd64719e7fc2692431cd5aee0814925e96c2892d1491b13189c23
+    platform: linux/amd64
+    command: ['--config', '/config/litellm.yaml', '--host', '0.0.0.0', '--port', '4000']
+    volumes:
+      - './litellm.yaml:/config/litellm.yaml:ro'
+    ports:
+      - '127.0.0.1::4000'
+    depends_on:
+      - llama
+      - embedding
+    mem_limit: 2g
+    cpus: 2

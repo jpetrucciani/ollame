@@ -1,0 +1,22 @@
+# Copy to ollame.toml and configure the upstream URL and secret files.
+[server]
+listen = "127.0.0.1:11434"
+admin_listen = "127.0.0.1:9434"
+
+[upstream]
+base_url = "http://127.0.0.1:4000/v1"
+api_key_file = ".secrets/upstream-key"
+
+[auth]
+mode = "required"
+tokens_file = ".secrets/tokens"
+
+[models]
+include = ["*"]
+exclude = []
+
+# Optional stable client-facing name. The target must pass the filters above.
+# [[models.alias]]
+# name = "coder"
+# target = "your-upstream-model-id"
+# hide_target = true

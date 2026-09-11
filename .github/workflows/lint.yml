@@ -1,0 +1,33 @@
+name: Lint
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+  workflow_call:
+
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+      - uses: cachix/install-nix-action@13d8dd58da0234aa297dedd986986ccb8e7f3e24 # v31.11.1
+      - name: Check Go formatting through the Nix helper
+        run: |
+          nix-build -A scripts.fmt -o result-fmt
+          ./result-fmt/bin/fmt
+          git diff --exit-code -- '*.go'
+      - name: Vet through the Nix helper
+        run: |
+          nix-build -A scripts.vet -o result-vet
+          ./result-vet/bin/vet
+      - name: Run internal tests through the Nix helper
+        run: |
+          nix-build -A scripts.test -o result-test
+          ./result-test/bin/test-ollame -- ./internal/...

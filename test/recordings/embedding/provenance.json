@@ -1,0 +1,8 @@
+{
+  "source": "real LiteLLM -> llama-server (Nomic embedding)",
+  "pins": "../../integration/pins.json",
+  "sha256": "c73b4de937987b18569eb82d4fec148994d221c6d0f5c00334bb316922914b91",
+  "content_type": "application/json",
+  "recorded_date": "2026-09-10",
+  "request": "request.json"
+}
